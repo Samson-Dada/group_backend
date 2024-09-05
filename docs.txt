@@ -1,0 +1,47 @@
+Project Topic
+
+
+Using the provided code, your team is to create an application that has the following protected pages which means that a user needs to be logged in before they can access the pages, 
+
+
+- Dashboard
+- ⁠Product
+- ⁠Users
+- ⁠Settings
+
+The dashboard should display the following information 
+
+- no of users created
+- ⁠no of products created
+
+All this information should be represented in charts
+
+
+The Product page should have table that displays the following information 
+
+- product name
+- ⁠product image
+- ⁠product price
+- ⁠product description 
+- ⁠created by
+- ⁠created date
+
+As a user I want to be able to;
+
+- create a product 
+- ⁠edit a product 
+- ⁠get all products 
+- ⁠delete a product 
+
+Also there should be an admin that can
+
+- create other users
+- ⁠edit users
+- ⁠delete users
+- ⁠get all users 
+
+
+The settings page should the following 
+
+- place to change my password
+- ⁠update my profile
