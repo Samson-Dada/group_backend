@@ -1,9 +1,5 @@
 import Product from "../models/Products.js";
-import {
-	apiResponseCode,
-	apiResponseMessage,
-	apiResponseStatus,
-} from "../helper.js";
+import { apiResponseCode, apiResponseStatus } from "../helper.js";
 
 export const getAllProduct = async (req, res, next) => {
 	try {
@@ -31,7 +27,7 @@ export const createProduct = async (req, res, next) => {
 		res.status(201).json({
 			responseCode: apiResponseCode.SUCCESSFUL,
 			responseStatus: apiResponseStatus.SUCCESS,
-			responseMessage: apiResponseMessage,
+			responseMessage: "Product created successfully",
 			data: { newProduct },
 		});
 	} catch (err) {
@@ -56,7 +52,7 @@ export const getProduct = async (req, res, next) => {
 		res.status(200).json({
 			responseCode: apiResponseCode.SUCCESSFUL,
 			responseStatus: apiResponseStatus.SUCCESS,
-			responseMessage: apiResponseMessage.SUCCESS,
+			responseMessage: "success",
 			data: { product },
 		});
 	} catch (err) {
@@ -91,7 +87,7 @@ export const updateProduct = async (req, res, next) => {
 		});
 	} catch (err) {
 		res.status(500).json({
-			responseCode: apiResponseCode.INTERNAL_SERVER_ERROR,
+			responseCode: apiResponseCode.INTERNAL_SERVER_ERR,
 			responseStatus: apiResponseStatus.FAILED,
 			message: `Error: ${err.message}`,
 		});
@@ -134,7 +130,7 @@ export const getProductTotalCount = async (req, res, next) => {
 	} catch (err) {
 		res.status(500).json({
 			responseCode: "05",
-			responseCode: apiResponseCode.INTERNAL_SERVER_ERROR,
+			responseCode: apiResponseCode.INTERNAL_SERVER_ERR,
 			responseStatus: apiResponseStatus.FAILED,
 			message: `Error: ${err.message}`,
 		});

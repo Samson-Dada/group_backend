@@ -1,9 +1,5 @@
 import User from "../models/User.js";
-import {
-	apiResponseCode,
-	apiResponseMessage,
-	apiResponseStatus,
-} from "../helper.js";
+import { apiResponseCode, apiResponseStatus } from "../helper.js";
 
 export const getAllUser = async (req, res) => {
 	try {
@@ -33,7 +29,7 @@ export const getUser = async (req, res) => {
 			return res.status(404).json({
 				responseCode: apiResponseCode.BAD_REQUEST,
 				responseStatus: apiResponseStatus.FAILED,
-				message: "Product not found",
+				message: "User not found",
 			});
 		}
 		res.status(200).json({
@@ -53,7 +49,7 @@ export const getUser = async (req, res) => {
 
 export const updateUser = async (req, res) => {
 	try {
-		const user = await user.findByIdAndUpdate(req.params.id, req.body, {
+		const user = await User.findByIdAndUpdate(req.params.id, req.body, {
 			new: true,
 			runValidators: true,
 		});
@@ -62,19 +58,19 @@ export const updateUser = async (req, res) => {
 			return res.status(404).json({
 				responseCode: apiResponseCode.BAD_REQUEST,
 				responseStatus: apiResponseStatus.FAILED,
-				message: "Product with the specified ID not found",
+				message: "User with the specified ID not found",
 			});
 		}
 
 		res.status(200).json({
 			responseCode: apiResponseCode.SUCCESSFUL,
 			responseStatus: apiResponseStatus.SUCCESS,
-			responseMessage: "Product updated successfully",
+			responseMessage: "User updated successfully",
 			data: { user },
 		});
 	} catch (err) {
 		res.status(500).json({
-			responseCode: apiResponseCode.INTERNAL_SERVER_ERROR,
+			responseCode: apiResponseCode.INTERNAL_SERVER_ERR,
 			responseStatus: apiResponseStatus.FAILED,
 			message: `Error: ${err.message}`,
 		});
@@ -98,7 +94,7 @@ export const deleteUser = async (req, res) => {
 		});
 	} catch (err) {
 		res.status(500).json({
-			responseCode: apiResponseCode.INTERNAL_SERVER_ERROR,
+			responseCode: apiResponseCode.INTERNAL_SERVER_ERR,
 			responseStatus: apiResponseStatus.FAILED,
 			message: `Error: ${err.message}`,
 		});
@@ -117,7 +113,7 @@ export const getUserTotalCount = async (req, res) => {
 	} catch (err) {
 		res.status(500).json({
 			responseCode: "05",
-			responseCode: apiResponseCode.INTERNAL_SERVER_ERROR,
+			responseCode: apiResponseCode.INTERNAL_SERVER_ERR,
 			responseStatus: apiResponseStatus.FAILED,
 			message: `Error: ${err.message}`,
 		});
