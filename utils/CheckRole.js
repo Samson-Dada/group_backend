@@ -1,6 +1,6 @@
 import { apiResponseCode, apiResponseStatus } from "../helper.js";
 
-export const restrictedTo = (role) => {
+export const checkRole = (role) => {
 	return (req, res, next) => {
 		// Extract role from the request headers
 		const userRole = req.headers["role"];
