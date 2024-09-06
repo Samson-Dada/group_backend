@@ -8,7 +8,7 @@ import {
 	updateUser,
 } from "../controllers/userController.js";
 
-import { restrictedTo } from "./../utils/CheckRole.js";
+import { restrictedTo } from "../utils/checkRole.js";
 const UserRouter = express();
 
 UserRouter.route("/").get(getAllUser);

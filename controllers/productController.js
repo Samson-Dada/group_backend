@@ -1,5 +1,6 @@
 import Product from "../models/Products.js";
 import { apiResponseCode, apiResponseStatus } from "../helper.js";
+import { upload } from "../utils/SaveProductImage.js";
 
 export const getAllProduct = async (req, res) => {
 	try {
@@ -20,6 +21,47 @@ export const getAllProduct = async (req, res) => {
 		});
 	}
 };
+
+export const createProduct = async (req, res, next) => {
+	// Upload single image with the 'image' field name
+	upload.single("image")(req, res, async (err) => {
+		if (err) {
+			return res.status(400).json({
+				responseCode: apiResponseCode.BAD_REQUEST,
+				responseStatus: apiResponseStatus.FAILED,
+				message: err,
+			});
+		}
+
+		try {
+			// Get image path if image is uploaded
+			const imagePath = req.file
+				? `/uploads/products/${req.file.filename}`
+				: "";
+
+			// Create new product
+			const newProduct = await Product.create({
+				...req.body,
+				image: imagePath, // Save image path in the database
+			});
+
+			res.status(201).json({
+				responseCode: apiResponseCode.SUCCESSFUL,
+				responseStatus: apiResponseStatus.SUCCESS,
+				responseMessage: "Product created successfully",
+				data: { newProduct },
+			});
+		} catch (err) {
+			res.status(400).json({
+				responseCode: apiResponseCode.BAD_REQUEST,
+				responseStatus: apiResponseStatus.FAILED,
+				message: `Error: ${err.message}`,
+			});
+		}
+	});
+};
+
+/*
 
 export const createProduct = async (req, res) => {
 	try {
@@ -47,7 +89,7 @@ export const createProduct = async (req, res) => {
 		}
 	}
 };
-
+*/
 export const getProduct = async (req, res) => {
 	try {
 		const product = await Product.findById(req.params.id);

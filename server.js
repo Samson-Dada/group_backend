@@ -18,6 +18,7 @@ app.use("/api/products", productRouter);
 
 app.use("/api/users", UserRoute);
 
+app.use("/uploads", express.static("uploads"));
 dbConnection();
 app.listen(config.port, () => {
 	console.log(`Server is running on port ${config.port}`);
