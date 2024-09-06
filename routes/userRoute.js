@@ -9,6 +9,7 @@ import {
 } from "../controllers/userController.js";
 
 import { checkRole } from "../utils/checkRole.js";
+
 const UserRouter = express();
 
 UserRouter.route("/").get(getAllUser);

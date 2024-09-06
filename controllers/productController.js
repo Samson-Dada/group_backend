@@ -22,8 +22,7 @@ export const getAllProduct = async (req, res) => {
 	}
 };
 
-export const createProduct = async (req, res, next) => {
-	// Upload single image with the 'image' field name
+export const createProduct = async (req, res) => {
 	upload.single("image")(req, res, async (err) => {
 		if (err) {
 			return res.status(400).json({
