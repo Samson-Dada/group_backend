@@ -1,8 +1,7 @@
 import { apiResponseCode, apiResponseStatus } from "../helper.js";
 
-export const checkRole = (role) => {
+const checkRole = (role) => {
 	return (req, res, next) => {
-		// Extract role from the request headers
 		const userRole = req.headers["role"];
 
 		if (!userRole) {
@@ -24,3 +23,5 @@ export const checkRole = (role) => {
 		next();
 	};
 };
+
+export default checkRole;
