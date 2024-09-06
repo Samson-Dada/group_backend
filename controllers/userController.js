@@ -1,5 +1,73 @@
 import User from "../models/User.js";
 import { apiResponseCode, apiResponseStatus } from "../helper.js";
+import bcrypt from "bcryptjs";
+import Joi from "joi";
+import jwtToken from "../utils/JwtToken.js";
+
+export const createUser = async (req, res) => {
+	const registerSchema = Joi.object({
+		fullName: Joi.string().required(),
+		email: Joi.string().email().required(),
+		phoneNumber: Joi.string().required(),
+		username: Joi.string().required(),
+		password: Joi.string().min(8).required(),
+	});
+
+	try {
+		const { error } = registerSchema.validate(req.body);
+		if (error) {
+			return res.status(400).json({
+				responseCode: apiResponseCode.BAD_REQUEST,
+				responseMessage: error.details[0].message,
+				data: null,
+			});
+		}
+		const { fullName, email, phoneNumber, username, password, role } = req.body;
+
+		let user = await User.findOne({ email });
+		if (user) {
+			return res.status(400).json({
+				responseCode: apiResponseCode.BAD_REQUEST,
+				responseMessage: `${email} already exist`,
+				data: null,
+			});
+		}
+
+		const hashPassword = await bcrypt.hash(password, 10);
+
+		user = new User({
+			fullName,
+			email,
+			phoneNumber,
+			username,
+			password: hashPassword,
+			role: req.body.role || "user",
+		});
+
+		await user.save();
+
+		const token = jwtToken(user);
+		res.status(201).json({
+			responseCode: apiResponseCode.SUCCESSFUL,
+			responseMessage: "User created successfully",
+			token: token,
+			data: {
+				fullName,
+				email,
+				phoneNumber,
+				username,
+				role,
+			},
+		});
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({
+			responseCode: apiResponseCode.INTERNAL_SERVER_ERR,
+			responseMessage: "Internal server error",
+			data: null,
+		});
+	}
+};
 
 export const getAllUser = async (req, res) => {
 	try {

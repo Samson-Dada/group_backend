@@ -1,7 +1,7 @@
 import Product from "../models/Products.js";
 import { apiResponseCode, apiResponseStatus } from "../helper.js";
 
-export const getAllProduct = async (req, res, next) => {
+export const getAllProduct = async (req, res) => {
 	try {
 		const product = await Product.find();
 		res.status(200).json({
@@ -21,7 +21,7 @@ export const getAllProduct = async (req, res, next) => {
 	}
 };
 
-export const createProduct = async (req, res, next) => {
+export const createProduct = async (req, res) => {
 	try {
 		const newProduct = await Product.create(req.body);
 		res.status(201).json({
@@ -31,15 +31,24 @@ export const createProduct = async (req, res, next) => {
 			data: { newProduct },
 		});
 	} catch (err) {
-		res.status(400).json({
-			responseCode: apiResponseCode.BAD_REQUEST,
-			responseStatus: apiResponseStatus.FAILED,
-			message: `Error ${err}`,
-		});
+		if (err.code === 11000) {
+			const duplicateField = Object.keys(err.keyValue)[0];
+			res.status(400).json({
+				responseCode: apiResponseCode.BAD_REQUEST,
+				responseStatus: apiResponseStatus.FAILED,
+				message: `The ${duplicateField} '${err.keyValue[duplicateField]}' is already in use. Please choose a different one.`,
+			});
+		} else {
+			res.status(400).json({
+				responseCode: apiResponseCode.BAD_REQUEST,
+				responseStatus: apiResponseStatus.FAILED,
+				message: `Error: ${err.message}`,
+			});
+		}
 	}
 };
 
-export const getProduct = async (req, res, next) => {
+export const getProduct = async (req, res) => {
 	try {
 		const product = await Product.findById(req.params.id);
 		if (!product) {
@@ -64,7 +73,7 @@ export const getProduct = async (req, res, next) => {
 	}
 };
 
-export const updateProduct = async (req, res, next) => {
+export const updateProduct = async (req, res) => {
 	try {
 		const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
 			new: true,
@@ -94,7 +103,7 @@ export const updateProduct = async (req, res, next) => {
 	}
 };
 
-export const deleteProduct = async (req, res, next) => {
+export const deleteProduct = async (req, res) => {
 	try {
 		const product = await Product.findByIdAndDelete(req.params.id);
 		if (!product) {
@@ -111,14 +120,14 @@ export const deleteProduct = async (req, res, next) => {
 		});
 	} catch (err) {
 		res.status(500).json({
-			responseCode: apiResponseCode.INTERNAL_SERVER_ERROR,
+			responseCode: apiResponseCode.INTERNAL_SERVER_ERR,
 			responseStatus: apiResponseStatus.FAILED,
 			message: `Error: ${err.message}`,
 		});
 	}
 };
 
-export const getProductTotalCount = async (req, res, next) => {
+export const getProductTotalCount = async (req, res) => {
 	try {
 		const totalCount = await Product.countDocuments();
 		res.status(200).json({
